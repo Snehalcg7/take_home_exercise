@@ -15,7 +15,7 @@ registroy_data_reponse = requests.get(get_reg_url)
 data = registroy_data_reponse.json()
 content_stream_grades = data.get('content_stream_grades')
 
-        
+       
 for each_cotent_stream in content_stream_grades:
     content_strem = {}
     content_strem["content_strem"] = each_cotent_stream.get('tag')
@@ -26,4 +26,15 @@ for each_cotent_stream in content_stream_grades:
     print(images_id_list)
     print(content_strem)
 
+# Get image required fields 
+get_images_url = requests.get(f"{get_reg_url}/images")
+images_data = get_images_url.json()
+for images in images_data.get('data'):
+    last_updated_date = images.get("last_update_date")
+  #  respose_data["last_update_date"] = last_updated_date
+    for labels in images.get("parsed_data").get("labels"):
+        if labels.get('name') == "vcs-ref":
+            vcs_ref = labels.get('value')
+   #         respose_data["vcs_ref"] = vcs_ref
 
+print(respose_data)
