@@ -23,6 +23,7 @@ def get_latest_images(images_list):
     published_date = ""
     grade = ""
     for image_id in images_list:
+        #Getting iamges fields filtered by required fields
         image_data = requests.get(url=f"https://catalog.redhat.com/api/containers/v1/images/id/{image_id}?include=repositories.published_date&include=last_update_date&include=freshness_grades.grade&include=_id&include=parsed_data.labels").json()
         if flag == 0:
             latest_date = image_data.get("last_update_date")
@@ -35,6 +36,7 @@ def get_latest_images(images_list):
                      vcs_ref = lables.get('value')
             for frenesh_grade in image_data.get("freshness_grades"):
                 grade = frenesh_grade.get('grade')
+    #return all the required fields for result
     return published_date,vcs_ref, grade
         
 #Get content streams data
@@ -45,10 +47,15 @@ for each_cotent_stream in content_stream_grades:
     for image_id in each_cotent_stream.get("image_ids"):
         images_id_list.append(image_id.get('id'))
     
+    #function call to get the data fields of recent images only from each content stream
     publisted_date, vcsRef, grade = get_latest_images(images_id_list)
+    
+    #storing the fields in the list
     content_strem["vcsRef"] = vcsRef
     content_strem["publishedDate"] = publisted_date
     content_strem["freshnessGrade"] = grade
+    
+    #final result
     respose_data.append(content_strem)
 
 #Print the final result
